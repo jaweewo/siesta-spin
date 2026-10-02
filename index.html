@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>La Ruleta de la Siesta · Edición andaluza</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+
+    /* Día de feria */
+    --bg: #F1DBAA;
+    --dot: rgba(200, 16, 46, .10);
+    --ink: #3A2410;
+    --muted: #6E4D2B;
+    --card: #FFF8E6;
+    --title: #1E7B3A;
+    --verde: #1E7B3A;
+    --rojo: #C8102E;
+    --azul: #1B4F9C;
+    --albero: #F0B93A;
+    --crema: #FFF6DF;
+    --band: #1E7B3A;
+
+    --display: 'Alfa Slab One', 'Rockwell', 'Cooper Black', Georgia, serif;
+    --body: 'Figtree', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  }
+  /* Noche de feria */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0F1B3D;
+      --dot: rgba(255, 246, 223, .06);
+      --ink: #FBF1D8;
+      --muted: #CDBB8E;
+      --card: #172A55;
+      --title: #FFF0C2;
+      --band: #14602C;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0F1B3D;
+    --dot: rgba(255, 246, 223, .06);
+    --ink: #FBF1D8;
+    --muted: #CDBB8E;
+    --card: #172A55;
+    --title: #FFF0C2;
+    --band: #14602C;
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  *, *::before, *::after { box-sizing: inherit; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: var(--bg);
+    background-image:
+      radial-gradient(circle, var(--dot) 0 7px, transparent 7.5px),
+      radial-gradient(circle, var(--dot) 0 7px, transparent 7.5px);
+    background-size: 52px 52px;
+    background-position: 0 0, 26px 26px;
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  button { font: inherit; cursor: pointer; }
+  :focus-visible { outline: 4px solid var(--azul); outline-offset: 3px; }
+  @media (prefers-color-scheme: dark) { :focus-visible { outline-color: var(--albero); } }
+
+  /* ---------- Farolillos ---------- */
+  .lanterns {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0 3vw;
+    height: clamp(70px, 14vw, 110px);
+    overflow: hidden;
+    border-top: 6px solid var(--rojo);
+  }
+  .lantern { display: flex; flex-direction: column; align-items: center; }
+  .lantern .cord { width: 2px; background: var(--ink); opacity: .45; }
+  .lantern .body {
+    position: relative;
+    width: clamp(18px, 4.2vw, 34px);
+    aspect-ratio: .8;
+    border-radius: 50% / 46%;
+    background: repeating-linear-gradient(90deg, var(--c) 0 5px, var(--crema) 5px 10px);
+    border: 2px solid var(--c);
+  }
+  .lantern .body::before {
+    content: "";
+    position: absolute; left: 50%; top: -5px;
+    width: 40%; height: 5px; margin-left: -20%;
+    background: var(--albero); border-radius: 2px 2px 0 0;
+  }
+
+  /* ---------- Cabecera ---------- */
+  .top { text-align: center; padding: 8px 20px 4px; }
+  h1 {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: clamp(2.1rem, 7.2vw, 4.1rem);
+    line-height: 1.04;
+    margin: 6px 0 8px;
+    color: var(--title);
+    text-wrap: balance;
+  }
+  .sub {
+    font-size: clamp(1.02rem, 2.6vw, 1.3rem);
+    font-weight: 600;
+    color: var(--muted);
+    margin: 0 auto;
+    max-width: 38ch;
+    text-wrap: balance;
+  }
+
+  /* ---------- Escenario ---------- */
+  .stage {
+    display: grid;
+    gap: 28px 44px;
+    grid-template-columns: 1fr;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 22px 18px 34px;
+    align-items: start;
+  }
+  @media (min-width: 900px) {
+    .stage { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); padding-top: 34px; }
+  }
+  .wheel-col { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+
+  .wheel-wrap { position: relative; width: min(94vw, 560px); aspect-ratio: 1; margin-top: 14px; }
+  .wheel-wrap svg.disc { display: block; width: 100%; height: 100%; }
+  .s-hour { font-family: var(--display); font-size: 27px; }
+  .s-label { font-family: var(--body); font-weight: 700; font-size: 12.5px; }
+  .s-emoji { font-size: 26px; }
+  .bulb { fill: #8A6A1E; transition: fill .08s; }
+  .bulb.on { fill: #FFE27A; filter: drop-shadow(0 0 5px #FFD54A); }
+
+  .pointer {
+    position: absolute; left: 50%; top: -4%;
+    width: 9%; margin-left: -4.5%;
+    transform-origin: 50% 25%;
+    z-index: 3;
+    filter: drop-shadow(0 3px 0 rgba(0,0,0,.25));
+  }
+  .pointer svg { display: block; width: 100%; height: auto; }
+
+  .hub {
+    position: absolute; left: 50%; top: 50%;
+    width: 19%; aspect-ratio: 1; transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: var(--verde); color: #fff;
+    border: 4px solid var(--crema);
+    font-family: var(--display);
+    font-size: clamp(.85rem, 3.3vw, 1.45rem);
+    line-height: 1;
+    padding: 0;
+    z-index: 2;
+  }
+  .hub:disabled { background: #5d8a6a; }
+
+  .controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: center; }
+  .spin {
+    font-family: var(--display);
+    font-size: clamp(1.25rem, 4.2vw, 1.7rem);
+    background: var(--rojo); color: #fff;
+    border: 0; border-radius: 999px;
+    padding: 14px 34px;
+    box-shadow: 0 6px 0 #7e0a1d;
+    transition: transform .08s, box-shadow .08s;
+  }
+  .spin:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 2px 0 #7e0a1d; }
+  .spin:disabled { background: #a4545f; box-shadow: 0 6px 0 #6b3a42; cursor: progress; }
+  .ghost {
+    background: transparent; color: var(--ink);
+    border: 2px solid var(--azul); border-radius: 999px;
+    padding: 9px 18px; font-weight: 700;
+  }
+  @media (prefers-color-scheme: dark) { .ghost { border-color: var(--albero); } }
+
+  /* ---------- Panel ---------- */
+  .panel { display: grid; gap: 24px; }
+  .tile {
+    background: var(--card);
+    border: 4px solid var(--azul);
+    border-radius: 6px;
+    box-shadow: 0 0 0 4px var(--card), 0 0 0 7px var(--azul);
+    margin: 7px;
+    padding: 20px 22px 22px;
+  }
+  .tile h2 {
+    font-family: var(--display); font-weight: 400;
+    font-size: 1.35rem; margin: 0 0 10px; color: var(--title);
+  }
+  .ole { font-family: var(--display); color: var(--rojo); font-size: 1.5rem; margin: 0; }
+  @media (prefers-color-scheme: dark) { .ole { color: #FF8A9B; } }
+  .hour { font-family: var(--display); font-size: clamp(3.2rem, 11vw, 4.8rem); line-height: 1; margin: 2px 0 4px; color: var(--title); }
+  .label { font-weight: 700; font-size: 1.25rem; margin: 0 0 8px; }
+  .verdict p { max-width: 52ch; }
+  .abuela {
+    margin: 14px 0 0; padding: 12px 14px;
+    border-left: 6px solid var(--verde);
+    background: rgba(30, 123, 58, .10);
+    font-style: italic;
+  }
+  .abuela b { font-style: normal; color: var(--title); }
+  .empty { color: var(--muted); margin: 0; max-width: 46ch; }
+  .pop { animation: pop .45s cubic-bezier(.2, 1.4, .4, 1); }
+  @keyframes pop { from { transform: scale(.92) rotate(-1.5deg); } to { transform: none; } }
+
+  .hist ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  .hist li { display: flex; gap: 12px; align-items: baseline; padding-bottom: 6px; border-bottom: 2px dotted var(--muted); }
+  .hist li b { font-family: var(--display); font-weight: 400; min-width: 3.6ch; color: var(--title); }
+  .count { font-weight: 700; margin: 0 0 10px; }
+
+  .thermo .bar { height: 18px; border-radius: 9px; background: rgba(0,0,0,.14); overflow: hidden; margin: 10px 0 6px; }
+  .thermo .fill { height: 100%; width: 0; background: linear-gradient(90deg, var(--albero), var(--rojo)); border-radius: 9px; transition: width 1s ease-out; }
+  .thermo p { margin: 0; }
+  .small { font-size: .88rem; color: var(--muted); }
+
+  /* ---------- Pie ---------- */
+  footer { margin-top: 10px; }
+  .caseta { height: 22px; background: repeating-linear-gradient(90deg, var(--rojo) 0 28px, var(--crema) 28px 56px); }
+  .marquee { background: var(--band); color: var(--crema); overflow: hidden; padding: 10px 0; }
+  .track { display: flex; width: max-content; animation: slide 46s linear infinite; }
+  .track span { font-family: var(--display); font-size: 1.15rem; padding-right: 2.4rem; white-space: nowrap; }
+  @keyframes slide { to { transform: translateX(-50%); } }
+  .legal { text-align: center; padding: 16px 20px calc(22px + env(safe-area-inset-bottom, 0px)); margin: 0; color: var(--muted); font-size: .92rem; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .track { animation: none; flex-wrap: wrap; width: auto; justify-content: center; padding: 0 12px; }
+    .track [aria-hidden="true"] { display: none; }
+    .pop { animation: none; }
+    .thermo .fill { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="lanterns" id="lanterns" aria-hidden="true"></div>
+
+<header class="top">
+  <h1>La Ruleta de la Siesta</h1>
+  <p class="sub">Edición andaluza. Gira y descubre a qué hora te despiertas, quillo.</p>
+</header>
+
+<main class="stage">
+  <section class="wheel-col" aria-label="Ruleta">
+    <div class="wheel-wrap" id="wheelWrap">
+      <div class="pointer" id="pointer" aria-hidden="true">
+        <svg viewBox="0 0 44 60"><path d="M22 58 L4 21 A20 20 0 1 1 40 21 Z" fill="#C8102E" stroke="#FFF6DF" stroke-width="3" stroke-linejoin="round"/><circle cx="22" cy="20" r="6.5" fill="#FFF6DF"/></svg>
+      </div>
+      <svg class="disc" viewBox="-306 -306 612 612" role="img" aria-label="Ruleta con doce horas posibles para despertarse de la siesta">
+        <circle r="302" fill="#1B4F9C" stroke="#FFF6DF" stroke-width="4"/>
+        <circle r="270" fill="none" stroke="#FFF6DF" stroke-width="2" opacity=".7"/>
+        <g id="bulbs"></g>
+        <g id="wheel"></g>
+        <circle r="66" fill="#FFF6DF" stroke="#F0B93A" stroke-width="5"/>
+      </svg>
+      <button class="hub" id="hub" tabindex="-1" aria-hidden="true">¡Gira!</button>
+    </div>
+
+    <div class="controls">
+      <button class="spin" id="spinBtn" type="button">¡Gira, miarma!</button>
+      <button class="ghost" id="muteBtn" type="button" aria-pressed="false">🔊 Con palmas</button>
+    </div>
+  </section>
+
+  <aside class="panel">
+    <article class="tile verdict" id="verdict" aria-live="polite">
+      <h2>Tu veredicto</h2>
+      <p class="empty">Dale a girar y sabrás a qué hora abres los ojos. Ojito, que aquí no se perdona ni una cabezaíta.</p>
+    </article>
+
+    <section class="tile hist">
+      <h2>Siestas echás</h2>
+      <p class="count" id="count">Todavía ninguna. ¡Qué pereza más grande!</p>
+      <ol id="histList"></ol>
+    </section>
+
+    <section class="tile thermo">
+      <h2>Termómetro de siesta</h2>
+      <p id="thermoText"></p>
+      <div class="bar" aria-hidden="true"><div class="fill" id="thermoFill"></div></div>
+      <p class="small">Dato inventao, pero la sensación es real.</p>
+    </section>
+  </aside>
+</main>
+
+<footer>
+  <div class="caseta" aria-hidden="true"></div>
+  <div class="marquee">
+    <div class="track" id="track"></div>
+  </div>
+  <p class="legal">Hecho con arte entre Sevilla, Cádiz, Málaga, Granada, Córdoba, Jaén, Huelva y Almería. Ninguna abuela andaluza fue molestada durante la siesta pa hacer esta ruleta.</p>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---------- Datos ---------- */
+  var SLOTS = [
+    { h: '14:20', l: 'Ni la has catao',    e: '😳', v: 'Seis minutitos de siesta y ya te suena er móvil. Ozú, qué mala pata, quillo.' },
+    { h: '15:00', l: 'Veinte minutitos',   e: '⏱️', v: 'Una cabezaíta de manual. Te levantas nuevo, miarma. Bueno, casi nuevo.' },
+    { h: '16:30', l: 'Siesta de campeón',  e: '🏆', v: 'Persiana bajá, ventilador a tope y er mundo en pausa. Esto es vivir, pisha.' },
+    { h: '17:45', l: 'Baba en la almohá',  e: '🤤', v: 'Te despiertas con la marca der cojín en la cara y sin saber en qué año vives.' },
+    { h: '19:00', l: '¿Día o de noche?',   e: '🫠', v: 'Miras por la ventana y dudas: ¿es de día, de noche o es martes? Ni idea, illo.' },
+    { h: '20:30', l: 'Café pa resucitá',   e: '☕', v: 'Pides un cafelito con cara de fantasma y er camarero te mira con compasión.' },
+    { h: '22:00', l: 'Cena y a la cama',   e: '🍤', v: 'Pescaíto frito pa cenar y a dormir otra vez. Er cuerpo es sabio, mi arma.' },
+    { h: '00:30', l: 'La noche es joven',  e: '🌙', v: 'Te despiertas con ganas de caña y guitarra. Ahora sí que empieza la feria.' },
+    { h: '03:00', l: 'Insomnio de lujo',   e: '🦉', v: 'Ya no pegas ojo hasta er amanecer. Culpa der ventilador, no tuya, claro.' },
+    { h: '07:00', l: 'Del tirón, miarma',  e: '🥖', v: 'Dormiste del tirón y te levantas pa un molletito con aceite y tomate rayao.' },
+    { h: '11:00', l: 'Adiós, mañana',      e: '🛌', v: 'Se te fue er desayuno, er mercao y media vida. Pero con una sonrisa, eso sí.' },
+    { h: '14:00', l: 'Siesta eterna',      e: '💤', v: 'Dormiste 24 horas. Tu madre ha llamao catorce veces y er vecino, al timbre.' }
+  ];
+  var PALETTE = [
+    { bg: '#1E7B3A', fg: '#FFFFFF' },
+    { bg: '#FFF6DF', fg: '#3A2410' },
+    { bg: '#C8102E', fg: '#FFFFFF' },
+    { bg: '#F0B93A', fg: '#3A2410' }
+  ];
+  var OLES = ['¡Olé!', '¡Ozú!', '¡Arsa!', '¡Illo!', '¡Ay, mi arma!', '¡Pisha!', '¡Qué arte!'];
+  var ABUELA = [
+    'Con er sol de las tres, ni los lagartos salen. Tú tampoco.',
+    'Persiana bajá y ventilador en la cara: eso es ciencia, hijo mío.',
+    'Ni banco ni tienda: de tres a cinco er mundo está cerrao.',
+    'Agua fresquita, abanico y sombra: la santísima trinidad der verano.',
+    'Pa er que madruga, Dios le ayuda; pa er que sestea, Dios le abanica.',
+    'Un cafelito después y a la plaza, que er pueblo no se mira solo.',
+    'Si te quedas frito, tranquilo: la siesta no se perdona, se cumple.',
+    'Cuando er calor aprieta, er salmorejo se come con cuchara y sin prisa.'
+  ];
+  var MARQUEE = ['¡Ozú!', '¡Arsa!', '¡Olé!', 'Ay, miarma', 'Qué arte tiene este', 'Illo', 'Pisha', 'Quillo', 'Mi arma', 'Ni pa lante ni pa tra', 'Dende Huelva hasta Almería', 'Salmorejo y pescaíto', 'Rebujito en la caseta', 'Giralda, Alhambra y Mezquita', 'Er que no baile, no es de aquí', '¡Viva Andalucía!'];
+  var CITIES = [
+    ['Écija', 'la sartén de Andalucía'],
+    ['Montoro', 'donde er termómetro se rinde'],
+    ['Córdoba', 'patios y sombra, por favor'],
+    ['Sevilla', 'con tres naranjos y un abanico'],
+    ['Jaén', 'entre olivos y chicharras']
+  ];
+
+  var N = SLOTS.length, STEP = 360 / N, R = 266;
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- Farolillos ---------- */
+  (function lanterns() {
+    var box = document.getElementById('lanterns');
+    var cols = ['#C8102E', '#1E7B3A', '#F0B93A', '#1B4F9C'];
+    var n = 13, html = '';
+    for (var i = 0; i < n; i++) {
+      var sag = Math.sin(Math.PI * i / (n - 1));
+      var cord = 6 + Math.round(sag * 22);
+      html += '<div class="lantern"><div class="cord" style="height:' + cord + 'px"></div><div class="body" style="--c:' + cols[i % cols.length] + '"></div></div>';
+    }
+    box.innerHTML = html;
+  })();
+
+  /* ---------- Ruleta (SVG) ---------- */
+  function pol(a, r) {
+    var t = a * Math.PI / 180;
+    return [+(r * Math.sin(t)).toFixed(2), +(-r * Math.cos(t)).toFixed(2)];
+  }
+  var wheel = document.getElementById('wheel');
+  (function build() {
+    var s = '';
+    SLOTS.forEach(function (sl, i) {
+      var a = i * STEP, p = PALETTE[i % 4];
+      var p1 = pol(a - STEP / 2, R), p2 = pol(a + STEP / 2, R);
+      s += '<path d="M0 0L' + p1[0] + ' ' + p1[1] + 'A' + R + ' ' + R + ' 0 0 1 ' + p2[0] + ' ' + p2[1] + 'Z" fill="' + p.bg + '" stroke="#FFF6DF" stroke-width="2"/>';
+      s += '<g transform="rotate(' + (a - 90) + ')" fill="' + p.fg + '">' +
+           '<text class="s-hour" x="' + (R - 22) + '" y="-2" text-anchor="end">' + sl.h + '</text>' +
+           '<text class="s-label" x="' + (R - 22) + '" y="17" text-anchor="end">' + sl.l + '</text>' +
+           '<text class="s-emoji" x="' + (R - 172) + '" y="9" text-anchor="middle">' + sl.e + '</text></g>';
+    });
+    for (var j = 0; j < N; j++) {
+      var pp = pol(j * STEP + STEP / 2, R);
+      s += '<circle cx="' + pp[0] + '" cy="' + pp[1] + '" r="4.5" fill="#F0B93A" stroke="#FFF6DF" stroke-width="1.5"/>';
+    }
+    wheel.innerHTML = s;
+  })();
+
+  /* ---------- Bombillas del alumbrao ---------- */
+  var bulbsG = document.getElementById('bulbs'), bulbs = [], NB = 32;
+  (function () {
+    var s = '';
+    for (var i = 0; i < NB; i++) {
+      var p = pol(i * 360 / NB, 286);
+      s += '<circle class="bulb" cx="' + p[0] + '" cy="' + p[1] + '" r="7.5"/>';
+    }
+    bulbsG.innerHTML = s;
+    bulbs = Array.prototype.slice.call(bulbsG.children);
+  })();
+  var blinkT = null, phase = 0;
+  function paintBulbs() { bulbs.forEach(function (b, i) { b.classList.toggle('on', ((i + phase) % 2) === 0); }); }
+  function setBlink(ms) {
+    clearInterval(blinkT);
+    if (reduced) { bulbs.forEach(function (b) { b.classList.add('on'); }); return; }
+    paintBulbs();
+    blinkT = setInterval(function () { phase ^= 1; paintBulbs(); }, ms);
+  }
+  setBlink(700);
+
+  /* ---------- Sonido ---------- */
+  var ctx = null, muted = false;
+  function audio() {
+    if (!ctx) { try { ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { ctx = null; } }
+    if (ctx && ctx.state === 'suspended') { ctx.resume(); }
+    return ctx;
+  }
+  function tick() {
+    if (muted) return;
+    var c = audio(); if (!c) return;
+    var o = c.createOscillator(), g = c.createGain();
+    o.type = 'triangle';
+    o.frequency.value = 880 + Math.random() * 140;
+    g.gain.setValueAtTime(0.06, c.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + 0.05);
+    o.connect(g); g.connect(c.destination);
+    o.start(); o.stop(c.currentTime + 0.06);
+  }
+  function palmas() {
+    if (muted) return;
+    var c = audio(); if (!c) return;
+    var len = Math.floor(c.sampleRate * 0.09);
+    var buf = c.createBuffer(1, len, c.sampleRate), d = buf.getChannelData(0);
+    for (var i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3);
+    [0, .22, .44, .74, .96, 1.18, 1.48].forEach(function (t, k) {
+      var src = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain();
+      src.buffer = buf;
+      f.type = 'bandpass'; f.frequency.value = 1700 + (k % 2) * 400; f.Q.value = 0.9;
+      g.gain.value = k === 3 || k === 6 ? 0.9 : 0.6;
+      src.connect(f); f.connect(g); g.connect(c.destination);
+      src.start(c.currentTime + t);
+    });
+  }
+
+  /* ---------- Giro ---------- */
+  var rot = 0, spinning = false;
+  var spinBtn = document.getElementById('spinBtn');
+  var hub = document.getElementById('hub');
+  var pointer = document.getElementById('pointer');
+
+  function setRot(r) { wheel.setAttribute('transform', 'rotate(' + r + ')'); }
+  function flick() {
+    if (reduced || !pointer.animate) return;
+    pointer.animate([{ transform: 'rotate(-24deg)' }, { transform: 'rotate(0deg)' }], { duration: 120, easing: 'ease-out' });
+  }
+  function setBusy(b) {
+    spinning = b;
+    spinBtn.disabled = b; hub.disabled = b;
+    spinBtn.textContent = b ? 'Girando… ¡ay, ozú!' : '¡Gira, miarma!';
+  }
+
+  function spin() {
+    if (spinning) return;
+    audio();
+    setBusy(true);
+    setBlink(110);
+
+    var w = Math.floor(Math.random() * N);
+    var off = (Math.random() - 0.5) * STEP * 0.6;
+    var target = -w * STEP + off;
+    var k = 5 + Math.floor(Math.random() * 3);
+    var delta = (((target - rot) % 360) + 360) % 360;
+    var start = rot, finalRot = rot + k * 360 + delta;
+    var dur = reduced ? 2200 : 6800;
+    var t0 = performance.now();
+    var lastIdx = Math.floor((start + STEP / 2) / STEP);
+
+    function frame(now) {
+      var t = Math.min(1, (now - t0) / dur);
+      var e = 1 - Math.pow(1 - t, 4);
+      var r = start + (finalRot - start) * e;
+      setRot(r);
+      var idx = Math.floor((r + STEP / 2) / STEP);
+      if (idx !== lastIdx) { lastIdx = idx; tick(); flick(); }
+      if (t < 1) { requestAnimationFrame(frame); }
+      else { rot = finalRot % 360; setRot(rot); finish(w); }
+    }
+    requestAnimationFrame(frame);
+  }
+
+  /* ---------- Resultado ---------- */
+  var verdict = document.getElementById('verdict');
+  var histList = document.getElementById('histList');
+  var countEl = document.getElementById('count');
+  var history = [], total = 0;
+  try {
+    total = parseInt(localStorage.getItem('siesta:count') || '0', 10) || 0;
+    history = JSON.parse(localStorage.getItem('siesta:hist') || '[]');
+    if (!Array.isArray(history)) history = [];
+  } catch (e) { total = 0; history = []; }
+
+  function renderHistory() {
+    countEl.textContent = total === 0
+      ? 'Todavía ninguna. ¡Qué pereza más grande!'
+      : (total === 1 ? 'Llevas 1 siesta. Buen comienzo, miarma.' : 'Llevas ' + total + ' siestas. Eres un artista.');
+    histList.innerHTML = '';
+    history.slice(0, 5).forEach(function (it) {
+      var li = document.createElement('li');
+      var b = document.createElement('b'); b.textContent = it.h;
+      var sp = document.createElement('span'); sp.textContent = it.l;
+      li.appendChild(b); li.appendChild(sp);
+      histList.appendChild(li);
+    });
+  }
+  renderHistory();
+
+  function finish(w) {
+    var sl = SLOTS[w];
+    total += 1;
+    history.unshift({ h: sl.h, l: sl.l });
+    history = history.slice(0, 10);
+    try { localStorage.setItem('siesta:count', String(total)); localStorage.setItem('siesta:hist', JSON.stringify(history)); } catch (e) {}
+    renderHistory();
+
+    var ole = OLES[Math.floor(Math.random() * OLES.length)];
+    var abuela = ABUELA[Math.floor(Math.random() * ABUELA.length)];
+    verdict.innerHTML = '';
+    var h2 = document.createElement('h2'); h2.textContent = 'Tu veredicto';
+    var p0 = document.createElement('p'); p0.className = 'ole'; p0.textContent = ole;
+    var hr = document.createElement('p'); hr.className = 'hour'; hr.textContent = sl.h;
+    var lb = document.createElement('p'); lb.className = 'label'; lb.textContent = sl.e + ' ' + sl.l;
+    var p1 = document.createElement('p'); p1.textContent = sl.v;
+    var ab = document.createElement('p'); ab.className = 'abuela';
+    var abB = document.createElement('b'); abB.textContent = 'Consejo de la abuela: ';
+    ab.appendChild(abB); ab.appendChild(document.createTextNode(abuela));
+    var share = document.createElement('button');
+    share.type = 'button'; share.className = 'ghost'; share.textContent = 'Copiar pa er grupo de WhatsApp';
+    share.style.marginTop = '14px';
+    share.addEventListener('click', function () {
+      var txt = 'Me ha tocao las ' + sl.h + ' en la Ruleta de la Siesta andaluza: "' + sl.l + '". ' + sl.e + ' ¡Ozú!';
+      var done = function (ok) {
+        share.textContent = ok ? '¡Copiao, miarma!' : 'No se ha podío copiar';
+        setTimeout(function () { share.textContent = 'Copiar pa er grupo de WhatsApp'; }, 1800);
+      };
+      try {
+        navigator.clipboard.writeText(txt).then(function () { done(true); }, function () { done(false); });
+      } catch (e) { done(false); }
+    });
+    [h2, p0, hr, lb, p1, ab, share].forEach(function (n) { verdict.appendChild(n); });
+    verdict.classList.remove('pop'); void verdict.offsetWidth; verdict.classList.add('pop');
+
+    palmas();
+    setBlink(90);
+    setTimeout(function () { setBlink(700); setBusy(false); }, reduced ? 300 : 2200);
+  }
+
+  /* ---------- Controles ---------- */
+  spinBtn.addEventListener('click', spin);
+  hub.addEventListener('click', spin);
+  var muteBtn = document.getElementById('muteBtn');
+  muteBtn.addEventListener('click', function () {
+    muted = !muted;
+    muteBtn.setAttribute('aria-pressed', String(muted));
+    muteBtn.textContent = muted ? '🔇 Silencio, que hay siesta' : '🔊 Con palmas';
+  });
+
+  /* ---------- Termómetro ---------- */
+  (function () {
+    var c = CITIES[Math.floor(Math.random() * CITIES.length)];
+    var temp = 40 + Math.floor(Math.random() * 8);
+    document.getElementById('thermoText').textContent = 'Ahora mismo en ' + c[0] + ' (' + c[1] + '): ' + temp + ' grados a la sombra.';
+    var fill = document.getElementById('thermoFill');
+    requestAnimationFrame(function () { fill.style.width = Math.round(((temp - 30) / 20) * 100) + '%'; });
+  })();
+
+  /* ---------- Cinta de frases ---------- */
+  (function () {
+    var track = document.getElementById('track');
+    function copy(hidden) {
+      MARQUEE.forEach(function (t) {
+        var s = document.createElement('span'); s.textContent = t;
+        if (hidden) s.setAttribute('aria-hidden', 'true');
+        track.appendChild(s);
+      });
+    }
+    copy(false); copy(true);
+  })();
+
+  setRot(0);
+})();
+</script>
+</body>
+</html>
